@@ -16,7 +16,7 @@ Copy the contents of `/dist/` to the same directory as your HTML file. In the HT
 
 ```html
 <div id="dust-container"></div>
-<script src="../dist/js/dust.js"></script>
+<script src="./dist/js/dust.js"></script>
 ```
 
 `dust-container` is the div that the canvas will be put within. Style it however you'd like. Note that the canvas will stretch to fit.
