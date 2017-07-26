@@ -10,7 +10,7 @@ if ( !Detector.HasWebGL() ) {
     container.innerHTML = Detector.GetErrorHTML();
     container.classList.add("no-webgl");
 }
-else{
+else {
     let dust = new Dust(container, () => {
         // Dust is now fully loaded
         GUI.Init(dust);

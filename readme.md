@@ -1,13 +1,13 @@
 # Dust
 *A Cellular Automata visualizer for WebGL*
 
-<strong style="color:red">Epilepsy Warning</strong> - This program is likely to produce fast strobing effects without warning.
+<strong style="color:red">!!! Epilepsy Warning !!!</strong> - This program is likely to produce fast strobing effects without warning.
 
 ## About
 Dust is a WebGL-based renderer for visualizing the behavior of various Cellular Automata. It uses [CellAuto](https://sanojian.github.io/cellauto) for the CA simulation and [Pixi](http://www.pixijs.com/) for displaying the output.
 
 ## Building
-This is a Node project. You'll need [Gulp](https://gulpjs.com/)to build. Run `node install` to pull the dependencies and then `gulp build` to package the final files into `/dist/`.
+This is a Node project. You'll need [Gulp](https://gulpjs.com/) to build. Run `node install` to pull the dependencies and then `gulp build` to package the final files into `/dist/`.
 
 You can use `gulp preview` to open a browser window showing the contents of `/testpage/index.html`, which is a demo page for this plugin.
 
