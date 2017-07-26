@@ -151,11 +151,22 @@ export class Dust {
 
 }
 
+/**
+ * Convenience class for restricting the refresh rate of the simulation.
+ */
 class FrameCounter {
     constructor(frameFrequency, frameLimit = null) {
-        this.rawFrameCount = 0;
+        // The number of frames ingested
         this.frameCount = 0;
+
+        // The number of frames allowed to run
+        this.passedFrames = 0;
+
+        // Frame will run every `frameFrequency` frames that pass
         this.frameFrequency = frameFrequency;
+
+        // If set, class will stop allowing frames after `frameLimit` 
+        // passedFrames have been allowed.
         this.frameLimit = frameLimit;
     }
 
@@ -163,14 +174,14 @@ class FrameCounter {
      * Returns true once every `frameFrequency` times it is called.
      */
     IncrementFrame(){
-        this.rawFrameCount += 1;
-        if(this.rawFrameCount % this.frameFrequency == 0) {
+        this.frameCount += 1;
+        if(this.frameCount % this.frameFrequency == 0) {
             // If we've reached the frame limit
-            if(this.frameLimit != null && this.frameCount >= this.frameLimit)
+            if(this.frameLimit != null && this.passedFrames >= this.frameLimit)
                 return false;
 
-            this.rawFrameCount = 0;
-            this.frameCount += 1;
+            this.frameCount = 0;
+            this.passedFrames += 1;
             return true;
         }
         return false;
