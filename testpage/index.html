@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Dust</title>
+
+    <style>
+        body {
+            font-family: Monospace;
+            background-color: #0b0b0b;
+            color: #fff;
+            margin: 0px;
+            overflow: hidden;
+        }
+        .info {
+            color: #fff;
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            z-index: 100;
+            display:block;
+            pointer-events: none;
+        }
+        .info a{ color: #00f; font-weight: bold; text-decoration: underline; cursor: pointer; pointer-events: initial; }
+    </style>
+
+    <style>
+        div#dust-container {
+            width: 512px;
+            height: 512px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+
+    <!-- pixi.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.4/pixi.min.js"></script>
+
+    <!-- Optional Modules -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.4/dat.gui.min.js"></script>
+
+</head>
+
+
+<body>
+
+    <div class="info">
+	    <a href="http://www.pixijs.com/" target="_blank">pixi.js</a> - dust
+    </div>
+
+    <p style="text-align: center; margin-top: 4em">Epilepsy Warning</p>
+
+    <div id="dust-container"></div>
+    <script src="../dist/js/dust.js"></script>
+
+</body>
+
+
+
+</html>
