@@ -52,7 +52,11 @@ export class Dust {
     Setup() {
 
         // Create the world from the string
-        this.world = Worlds[this.worldOptions.name].call(this, this.worldOptions.width, this.worldOptions.height);
+        try {
+            this.world = Worlds[this.worldOptions.name].call(this, this.worldOptions.width, this.worldOptions.height);
+        } catch (err) {
+            throw "World with the name " + this.worldOptions.name + " does not exist!";
+        }
         this.framecounter.frameFrequency = this.world.recommendedFrameFrequency || 1;
 
         this.app.renderer.resize(this.world.width, this.world.height);
@@ -127,9 +131,6 @@ export class Dust {
         var pix = ctx.createImageData(this.textureCanvas.width, this.textureCanvas.height);		
         for (var y = 0; y < this.textureCanvas.height; y++) {			
             for (var x = 0; x < this.textureCanvas.width; x++) {
-                // Swap buffers if used
-                //if(this.world.grid[y][x].newState != null)
-                //    this.world.grid[y][x].state = this.world.grid[y][x].newState;
                 var paletteIndex = this.world.grid[y][x].getColor();
                 try {				
                     var colorRGBA = this.world.palette[paletteIndex];	

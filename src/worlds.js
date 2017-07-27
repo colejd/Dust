@@ -3,42 +3,105 @@ import * as CellAuto from "./vendor/cellauto.js";
 export var Worlds = {
 
     /**
-     * Conway's Game of Life.
-     * 
-     * From https://sanojian.github.io/cellauto
+     * Chooses a random elementary automata from a list.
      */
-    Life: function(width = 96, height = 96) {
-        var world = new CellAuto.World({
-            width: width,
-            height: height
-        });
-
-        world.palette = [
-            [68, 36, 52, 255],
-            [255, 255, 255, 255]
+    RandomRule: function (width = 128, height = 128) {
+        var rules = [
+            18, 22, 26, 54, 60, 90, 94, 110, 126, 150
         ];
+        var options = {
+            width: width,
+            height: height,
+            rule: rules[rules.length * Math.random() << 0], // Random rule from list
+            palette: [
+                [68, 36, 52, 255],
+                [255, 255, 255, 255]
+            ],
+            wrap: true
+        }
+        return Elementary(options);
+    },
 
-        world.registerCellType('living', {
-            getColor: function () {
-                return this.alive ? 0 : 1;
-            },
-            process: function (neighbors) {
-                var surrounding = this.countSurroundingCellsWithValue(neighbors, 'wasAlive');
-                this.alive = surrounding === 3 || surrounding === 2 && this.alive;
-            },
-            reset: function () {
-                this.wasAlive = this.alive;
-            }
-        }, function () {
-            // Init
-            this.alive = Math.random() > 0.5;
+    /**
+     * Conway's Game of Life
+     * B3/S23
+     */
+    Life: function (width = 128, height = 128) {
+        var options = {
+            width: width,
+            height: height,
+            B: [3],
+            S: [2, 3],
+            palette: [
+                [68, 36, 52, 255],
+                [255, 255, 255, 255]
+            ]
+        }
+        return LifeLike(options);
+    },
+
+    /**
+     * Generates a maze-like structure.
+     * Based on rule B3/S1234 (Mazecetric).
+     */
+    Mazecetric: function(width = 96, height = 96) {
+        var options = {
+            width: width,
+            height: height,
+            B: [3],
+            S: [1, 2, 3, 4],
+            palette: [
+                [68, 36, 52, 255],
+                [255, 255, 255, 255]
+            ],
+            recommendedFrameFrequency: 5,
+        }
+        return LifeLike(options, (x, y) => {
+            // Distribution function
+            return Math.random() < 0.1;
         });
+    },
 
-        world.initialize([
-            { name: 'living', distribution: 100 }
-        ]);
+    /**
+     * B35678/S5678
+     */
+    Diamoeba: function(width = 96, height = 96) {
+        var options = {
+            width: width,
+            height: height,
+            B: [3, 5, 6, 7, 8],
+            S: [5, 6, 7, 8],
+            palette: [
+                [68, 36, 52, 255],
+                [255, 255, 255, 255]
+            ],
+            recommendedFrameFrequency: 3
+        }
+        return LifeLike(options, (x, y) => {
+            // Distribution function
+            return Math.random() < 0.2;
+        });
+    },
 
-        return world;
+    /**
+     * B4678/S35678
+     */
+    Anneal: function(width = 96, height = 96) {
+        var options = {
+            width: width,
+            height: height,
+            B: [4, 6, 7, 8],
+            S: [3, 5, 6, 7, 8],
+            palette: [
+                [68, 36, 52, 255],
+                [255, 255, 255, 255]
+            ],
+            recommendedFrameFrequency: 3
+        }
+        return LifeLike(options, (x, y) => {
+            // Distribution function
+            return Math.random() < 0.3;
+        });
     },
 
     /**
@@ -129,47 +192,6 @@ export var Worlds = {
 
         return world;
 
-    },
-
-    /**
-     * Generates a maze-like structure.
-     * Based on rule B3/S1234 (Mazecetric).
-     */
-    Mazecetric: function(width = 96, height = 96) {
-        var world = new CellAuto.World({
-            width: width,
-            height: height
-        });
-        world.recommendedFrameFrequency = 5;
-
-        world.palette = [
-            [68, 36, 52, 255],
-            [255, 255, 255, 255]
-        ];
-
-        var threshold = (Math.random() * 5) / 10;
-
-        world.registerCellType('living', {
-            getColor: function () {
-                return this.alive ? 0 : 1;
-            },
-            process: function (neighbors) {
-                var surrounding = this.countSurroundingCellsWithValue(neighbors, 'wasAlive');
-                this.alive = surrounding === 3 || (surrounding >= 1 && surrounding <= 4 && this.alive);
-            },
-            reset: function () {
-                this.wasAlive = this.alive;
-            }
-        }, function () {
-            // Init
-            this.alive = Math.random() < threshold;
-        });
-
-        world.initialize([
-            { name: 'living', distribution: 100 }
-        ]);
-
-        return world;
     },
 
     /**
@@ -775,4 +797,113 @@ export var Worlds = {
         return world;
     }
 
+}
+
+
+/**
+ * Simulates a 1D automata.
+ * Expects a property `rule` in `options`, which is the integer rule of the CA.
+ * 
+ * Not totally correct yet!
+ * 
+ */
+function Elementary(options) {
+    var world = new CellAuto.World(options);
+
+    var rule = (options.rule >>> 0).toString(2);
+    while(rule.length < 8) {
+        rule = "0" + rule;
+    }
+
+    console.log(options.rule);
+
+    function processRule(leftAlive, centerAlive, rightAlive) {
+        var index = 0;
+        if(rightAlive) index += 1;
+        if(centerAlive) index += 2;
+        if(leftAlive) index += 4;
+        return rule[rule.length - 1 - index];
+    }
+    
+    function testRule() {
+        var lastIndex = rule.length - 1;
+        for(var i = 0; i < 8; i++) {
+            // Convert i to binary and use it to feed processRule
+            var bin = ((lastIndex - i) >>> 0).toString(2);
+            while(bin.length < 3) bin = "0" + bin;
+            var ruleOut = processRule(bin[0] == "1", bin[1] == "1", bin[2] == "1");
+
+            console.assert(ruleOut == rule[i], bin + " " + rule[i] + " " + (ruleOut == rule[i]).toString());
+        }
+    }
+    //testRule();
+
+    world.registerCellType('living', {
+        getColor: function () {
+            return this.alive ? 0 : 1;
+        },
+        process: function (neighbors) {
+            function getWasAlive(neighbor){
+                if(neighbor != null)
+                    return neighbor.wasAlive;
+                return false;
+            }
+            
+            // If the cell isn't active yet, determine its state based on its upper neighbors
+            if(!this.wasAlive) {
+                this.alive = processRule(getWasAlive(neighbors[0]), getWasAlive(neighbors[1]), getWasAlive(neighbors[2])) == "1";
+            }
+        },
+        reset: function () {
+            this.wasAlive = this.alive;
+        }
+    }, function (x, y) {
+        // Init
+        this.alive = (x == Math.floor(options.width / 2)) && (y == 1);
+        //this.alive = Math.random() < 0.01;
+        //this.wasAlive = this.alive;
+    });
+
+    world.initialize([
+        { name: 'living', distribution: 100 }
+    ]);
+
+    return world;
+}
+
+/**
+ * Simulates a Life-like automata. Uses B/S notation.
+ * See https://en.wikipedia.org/wiki/Life-like_cellular_automaton
+ * 
+ * Expects two additional properties in `options`:
+ * `B`: An array of ints representing the B component of the rule
+ * `S`: An array of ints representing the S component of the rule
+ */
+function LifeLike(options, distributionFunc) {
+    var world = new CellAuto.World(options);
+
+    world.registerCellType('living', {
+        getColor: function () {
+            return this.alive ? 0 : 1;
+        },
+        process: function (neighbors) {
+            var surrounding = this.countSurroundingCellsWithValue(neighbors, 'wasAlive');
+            this.alive = options.B.includes(surrounding) || options.S.includes(surrounding) && this.alive;
+        },
+        reset: function () {
+            this.wasAlive = this.alive;
+        }
+    }, function (x, y) {
+        // Init
+        if(distributionFunc)
+            this.alive = distributionFunc(x, y);
+        else   
+            this.alive = Math.random() < 0.5;
+    });
+
+    world.initialize([
+        { name: 'living', distribution: 100 }
+    ]);
+
+    return world;
 }
