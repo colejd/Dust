@@ -29,7 +29,7 @@ export class Dust {
 
         this.framecounter = new FrameCounter(1, null);
 
-        // Stop application wait for setup to finish
+        // Stop application and wait for setup to finish
         this.app.stop();
 
         // Load resources needed for the program to run
@@ -128,8 +128,8 @@ export class Dust {
         for (var y = 0; y < this.textureCanvas.height; y++) {			
             for (var x = 0; x < this.textureCanvas.width; x++) {
                 // Swap buffers if used
-                if(this.world.grid[y][x].newState != null)
-                    this.world.grid[y][x].state = this.world.grid[y][x].newState;
+                //if(this.world.grid[y][x].newState != null)
+                //    this.world.grid[y][x].state = this.world.grid[y][x].newState;
                 var paletteIndex = this.world.grid[y][x].getColor();
                 try {				
                     var colorRGBA = this.world.palette[paletteIndex];	

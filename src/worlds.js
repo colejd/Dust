@@ -133,21 +133,21 @@ export var Worlds = {
 
     /**
      * Generates a maze-like structure.
-     * 
-     * From https://sanojian.github.io/cellauto
+     * Based on rule B3/S1234 (Mazecetric).
      */
-    Maze: function(width = 128, height = 128) {
-        // thanks to SuperDisk on TIGSource forums!
-
+    Mazecetric: function(width = 96, height = 96) {
         var world = new CellAuto.World({
             width: width,
             height: height
         });
+        world.recommendedFrameFrequency = 5;
 
         world.palette = [
             [68, 36, 52, 255],
             [255, 255, 255, 255]
         ];
+
+        var threshold = (Math.random() * 5) / 10;
 
         world.registerCellType('living', {
             getColor: function () {
@@ -155,22 +155,14 @@ export var Worlds = {
             },
             process: function (neighbors) {
                 var surrounding = this.countSurroundingCellsWithValue(neighbors, 'wasAlive');
-
-                if (this.simulated < 20) {
-                    this.alive = surrounding === 1 || surrounding === 2 && this.alive;
-                }
-                if (this.simulated > 20 && surrounding == 2) {
-                    this.alive = true;
-                }
-                this.simulated += 1;
+                this.alive = surrounding === 3 || (surrounding >= 1 && surrounding <= 4 && this.alive);
             },
             reset: function () {
                 this.wasAlive = this.alive;
             }
         }, function () {
-            //init
-            this.alive = Math.random() > 0.5;
-            this.simulated = 0;
+            // Init
+            this.alive = Math.random() < threshold;
         });
 
         world.initialize([
@@ -215,10 +207,13 @@ export var Worlds = {
                 }
                 if (changing) this.state = next;
                 return true;
+            },
+            reset: function () {
+                this.state = this.newState;
             }
         }, function () {
             //init
-            this.state = Math.floor(Math.random() * 16);
+            this.newState = Math.floor(Math.random() * 16);
         });
 
         world.initialize([
@@ -647,7 +642,7 @@ export var Worlds = {
                 }
             },
             reset: function () {
-
+                this.state = this.newState;
             }
         }, function (x, y) {
             // Init 
@@ -764,7 +759,7 @@ export var Worlds = {
 
             },
             reset: function () {
-
+                this.state = this.newState;
             }
         }, function () {
             // Init
