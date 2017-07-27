@@ -7,8 +7,7 @@ export class Dust {
 
         var worldNames = Object.keys(Worlds);
         this.worldOptions = {
-            //name: worldNames[worldNames.length * Math.random() << 0], // Random startup world
-            name: "CyclicRainbows",
+            name: worldNames[worldNames.length * Math.random() << 0], // Random startup world
             //width: 128, // Can force a width/height here
             //height: 128,
         }
