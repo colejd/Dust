@@ -7,9 +7,10 @@ export class Dust {
 
         var worldNames = Object.keys(Worlds);
         this.worldOptions = {
-            name: worldNames[worldNames.length * Math.random() << 0], // Random startup world
+            //name: worldNames[worldNames.length * Math.random() << 0], // Random startup world
+            name: "CyclicRainbows",
             //width: 128, // Can force a width/height here
-            //height: 128
+            //height: 128,
         }
 
         // Create the app and put its canvas into `container`
@@ -132,16 +133,15 @@ export class Dust {
         for (var y = 0; y < this.textureCanvas.height; y++) {			
             for (var x = 0; x < this.textureCanvas.width; x++) {
                 var paletteIndex = this.world.grid[y][x].getColor();
-                try {				
-                    var colorRGBA = this.world.palette[paletteIndex];	
+                var colorRGBA = this.world.palette[paletteIndex];
+                if(colorRGBA != null) {
                     pix.data[index++] = colorRGBA[0];				
                     pix.data[index++] = colorRGBA[1];				
                     pix.data[index++] = colorRGBA[2];				
                     pix.data[index++] = colorRGBA[3];	
-                } catch (ex) {
-                    console.error(paletteIndex);
-                    throw new Error(ex);
-                }	
+                } else {
+                    throw "Palette index out of bounds: " + paletteIndex;
+                }
             }		
         } 		
         ctx.putImageData(pix, 0, 0);

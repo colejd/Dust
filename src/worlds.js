@@ -229,13 +229,10 @@ export var Worlds = {
                 }
                 if (changing) this.state = next;
                 return true;
-            },
-            reset: function () {
-                this.state = this.newState;
             }
         }, function () {
             //init
-            this.newState = Math.floor(Math.random() * 16);
+            this.state = Math.floor(Math.random() * 16);
         });
 
         world.initialize([
