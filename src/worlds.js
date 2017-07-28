@@ -35,7 +35,8 @@ export let Worlds = {
             palette: [
                 [68, 36, 52, 255],
                 [255, 255, 255, 255]
-            ]
+            ],
+            recommendedFrameFrequency: 2,
         }
         return LifeLike(options);
     },
