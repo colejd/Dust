@@ -11,7 +11,7 @@ export class GUI {
             return;
         }
 
-        var gui = new dat.GUI();
+        let gui = new dat.GUI();
 
         gui.add(dust.framecounter, 'frameFrequency').min(1).max(30).step(1).listen();
 

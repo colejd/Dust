@@ -1,15 +1,15 @@
 import * as CellAuto from "./vendor/cellauto.js";
 
-export var Worlds = {
+export let Worlds = {
 
     /**
      * Chooses a random elementary automata from a list.
      */
     RandomRule: function (width = 128, height = 128) {
-        var rules = [
+        let rules = [
             18, 22, 26, 54, 60, 90, 94, 110, 126, 150
         ];
-        var options = {
+        let options = {
             width: width,
             height: height,
             rule: rules[rules.length * Math.random() << 0], // Random rule from list
@@ -27,7 +27,7 @@ export var Worlds = {
      * B3/S23
      */
     Life: function (width = 128, height = 128) {
-        var options = {
+        let options = {
             width: width,
             height: height,
             B: [3],
@@ -45,7 +45,7 @@ export var Worlds = {
      * Based on rule B3/S1234 (Mazecetric).
      */
     Mazecetric: function(width = 96, height = 96) {
-        var options = {
+        let options = {
             width: width,
             height: height,
             B: [3],
@@ -66,7 +66,7 @@ export var Worlds = {
      * B35678/S5678
      */
     Diamoeba: function(width = 96, height = 96) {
-        var options = {
+        let options = {
             width: width,
             height: height,
             B: [3, 5, 6, 7, 8],
@@ -87,7 +87,7 @@ export var Worlds = {
      * B4678/S35678
      */
     Anneal: function(width = 96, height = 96) {
-        var options = {
+        let options = {
             width: width,
             height: height,
             B: [4, 6, 7, 8],
@@ -112,7 +112,7 @@ export var Worlds = {
     Lava: function (width = 128, height = 128) {
         // thanks to TheLastBanana on TIGSource
 
-        var world = new CellAuto.World({
+        let world = new CellAuto.World({
             width: width,
             height: height,
             wrap: true
@@ -123,8 +123,8 @@ export var Worlds = {
             [190,45,16,255], [244,102,20,255], [254,212,97,255]
         ];
 
-        var colors = [];
-        var index = 0;
+        let colors = [];
+        let index = 0;
         for (; index < 18; ++index) { colors[index] = 1; }
         for (; index < 22; ++index) { colors[index] = 0; }
         for (; index < 25; ++index) { colors[index] = 1; }
@@ -142,7 +142,7 @@ export var Worlds = {
 
         world.registerCellType('lava', {
             getColor: function () {
-                var v = this.value + 0.5
+                let v = this.value + 0.5
                     + Math.sin(this.x / world.width * Math.PI) * 0.04
                     + Math.sin(this.y / world.height * Math.PI) * 0.04
                     - 0.05;
@@ -152,7 +152,7 @@ export var Worlds = {
             },
             process: function (neighbors) {
                 if(this.droplet === true) {
-                    for (var i = 0; i < neighbors.length; i++) {
+                    for (let i = 0; i < neighbors.length; i++) {
                         if (neighbors[i] !== null && neighbors[i].value) {
                             neighbors[i].value = 0.5 *this.value;
                             neighbors[i].prev = 0.5 *this.prev;
@@ -161,7 +161,7 @@ export var Worlds = {
                     this.droplet = false;
                     return true;
                 }
-                var avg = this.getSurroundingCellsAverageValue(neighbors, 'value');
+                let avg = this.getSurroundingCellsAverageValue(neighbors, 'value');
                 this.next = 0.998 * (2 * avg - this.prev);
 
                 return true;
@@ -200,7 +200,7 @@ export var Worlds = {
      * From https://sanojian.github.io/cellauto
      */
     CyclicRainbows: function(width = 128, height = 128) {
-        var world = new CellAuto.World({
+        let world = new CellAuto.World({
             width: width,
             height: height
         });
@@ -219,10 +219,10 @@ export var Worlds = {
                 return this.state;
             },
             process: function (neighbors) {
-                var next = (this.state + Math.floor(Math.random()*2)) % 16;
+                let next = (this.state + Math.floor(Math.random()*2)) % 16;
 
-                var changing = false;
-                for (var i = 0; i < neighbors.length; i++) {
+                let changing = false;
+                for (let i = 0; i < neighbors.length; i++) {
                     if (neighbors[i] !== null) {
                         changing = changing || neighbors[i].state === next;
                     }
@@ -249,14 +249,14 @@ export var Worlds = {
      */
     CavesWithWater: function(width = 128, height = 128) {
         // FIRST CREATE CAVES
-        var world = new CellAuto.World({
+        let world = new CellAuto.World({
             width: width,
             height: height
         });
 
         world.registerCellType('wall', {
             process: function (neighbors) {
-                var surrounding = this.countSurroundingCellsWithValue(neighbors, 'wasOpen');
+                let surrounding = this.countSurroundingCellsWithValue(neighbors, 'wasOpen');
                 this.open = (this.wasOpen && surrounding >= 4) || surrounding >= 6;
             },
             reset: function () {
@@ -272,11 +272,11 @@ export var Worlds = {
         ]);
 
         // generate our cave, 10 steps aught to do it
-        for (var i=0; i<10; i++) {
+        for (let i=0; i<10; i++) {
             world.step();
         }
 
-        var grid = world.createGridFromValues([
+        let grid = world.createGridFromValues([
             { cellType: 'wall', hasProperty: 'open', value: 0 }
         ], 1);
 
@@ -316,25 +316,25 @@ export var Worlds = {
 
                 // cell below me will take all it can
                 if (neighbors[world.BOTTOM.index] !== null && this.water && neighbors[world.BOTTOM.index].water < 9) {
-                    var amt = Math.min(this.water, 9 - neighbors[world.BOTTOM.index].water);
+                    let amt = Math.min(this.water, 9 - neighbors[world.BOTTOM.index].water);
                     this.water-= amt;
                     neighbors[world.BOTTOM.index].water += amt;
                     return;
                 }
 
                 // bottom two corners take half of what I have
-                for (var i=5; i<=7; i++) {
+                for (let i=5; i<=7; i++) {
                     if (i!=world.BOTTOM.index && neighbors[i] !== null && this.water && neighbors[i].water < 9) {
-                        var amt = Math.min(this.water, Math.ceil((9 - neighbors[i].water)/2));
+                        let amt = Math.min(this.water, Math.ceil((9 - neighbors[i].water)/2));
                         this.water-= amt;
                         neighbors[i].water += amt;
                         return;
                     }
                 }
                 // sides take a third of what I have
-                for (i=3; i<=4; i++) {
+                for (let i=3; i<=4; i++) {
                     if (neighbors[i] !== null && neighbors[i].water < this.water) {
-                        var amt = Math.min(this.water, Math.ceil((9 - neighbors[i].water)/3));
+                        let amt = Math.min(this.water, Math.ceil((9 - neighbors[i].water)/3));
                         this.water-= amt;
                         neighbors[i].water += amt;
                         return;
@@ -368,14 +368,14 @@ export var Worlds = {
 
     Rain: function(width = 128, height = 128) {
         // FIRST CREATE CAVES
-        var world = new CellAuto.World({
+        let world = new CellAuto.World({
             width: width,
             height: height
         });
 
         world.registerCellType('wall', {
             process: function (neighbors) {
-                var surrounding = this.countSurroundingCellsWithValue(neighbors, 'wasOpen');
+                let surrounding = this.countSurroundingCellsWithValue(neighbors, 'wasOpen');
                 this.open = (this.wasOpen && surrounding >= 4) || surrounding >= 6;
             },
             reset: function () {
@@ -391,17 +391,17 @@ export var Worlds = {
         ]);
 
         // generate our cave, 10 steps aught to do it
-        for (var i=0; i<10; i++) {
+        for (let i=0; i<10; i++) {
             world.step();
         }
 
-        var grid = world.createGridFromValues([
+        let grid = world.createGridFromValues([
             { cellType: 'wall', hasProperty: 'open', value: 0 }
         ], 1);
 
         // cut the top half of the caves off
-        for (var y=0; y<Math.floor(world.height/2); y++) {
-            for (var x=0; x<world.width; x++) {
+        for (let y=0; y<Math.floor(world.height/2); y++) {
+            for (let x=0; x<world.width; x++) {
                 grid[y][x] = 0;
             }
         }
@@ -447,25 +447,25 @@ export var Worlds = {
 
                 // cell below me will take all it can
                 if (neighbors[world.BOTTOM.index] !== null && this.water && neighbors[world.BOTTOM.index].water < 9) {
-                    var amt = Math.min(this.water, 9 - neighbors[world.BOTTOM.index].water);
+                    let amt = Math.min(this.water, 9 - neighbors[world.BOTTOM.index].water);
                     this.water-= amt;
                     neighbors[world.BOTTOM.index].water += amt;
                     return;
                 }
 
                 // bottom two corners take half of what I have
-                for (var i=5; i<=7; i++) {
+                for (let i=5; i<=7; i++) {
                     if (i!=world.BOTTOM.index && neighbors[i] !== null && this.water && neighbors[i].water < 9) {
-                        var amt = Math.min(this.water, Math.ceil((9 - neighbors[i].water)/2));
+                        let amt = Math.min(this.water, Math.ceil((9 - neighbors[i].water)/2));
                         this.water-= amt;
                         neighbors[i].water += amt;
                         return;
                     }
                 }
                 // sides take a third of what I have
-                for (i=3; i<=4; i++) {
+                for (let i=3; i<=4; i++) {
                     if (neighbors[i] !== null && neighbors[i].water < this.water) {
-                        var amt = Math.min(this.water, Math.ceil((9 - neighbors[i].water)/3));
+                        let amt = Math.min(this.water, Math.ceil((9 - neighbors[i].water)/3));
                         this.water-= amt;
                         neighbors[i].water += amt;
                         return;
@@ -503,26 +503,26 @@ export var Worlds = {
      * From https://sanojian.github.io/cellauto
      */
     Splashes: function(width = 128, height = 128) {
-        var world = new CellAuto.World({
+        let world = new CellAuto.World({
             width: width,
             height: height
         });
 
         world.palette = [];
-        var colors = [];
-        for (var index=0; index<64; index++) {
+        let colors = [];
+        for (let index=0; index<64; index++) {
             world.palette.push([89, 125, 206, (index/64) * 255]);
             colors[index] = 63 - index;
         }
 
         world.registerCellType('water', {
             getColor: function () {
-                var v = (Math.max(2 * this.value + 0.02, 0) - 0.02) + 0.5;
+                let v = (Math.max(2 * this.value + 0.02, 0) - 0.02) + 0.5;
                 return colors[Math.floor(colors.length * v)];
             },
             process: function (neighbors) {
                 if(this.droplet == true) {
-                    for (var i = 0; i < neighbors.length; i++) {
+                    for (let i = 0; i < neighbors.length; i++) {
                         if (neighbors[i] !== null && neighbors[i].value) {
                             neighbors[i].value = 0.5 *this.value;
                             neighbors[i].prev = 0.5 *this.prev;
@@ -531,7 +531,7 @@ export var Worlds = {
                     this.droplet = false;
                     return true;
                 }
-                var avg = this.getSurroundingCellsAverageValue(neighbors, 'value');
+                let avg = this.getSurroundingCellsAverageValue(neighbors, 'value');
                 this.next = 0.99 * (2 * avg - this.prev);
                 return true;
             },
@@ -570,7 +570,7 @@ export var Worlds = {
      * http://jsfiddle.net/hungrycamel/9UrzJ/
      */
     Wolfram: function(width = 96, height = 96) {
-        var world = new CellAuto.World({
+        let world = new CellAuto.World({
             width: width,
             height: height,
             wrap: true
@@ -587,9 +587,9 @@ export var Worlds = {
             [255, 180, 0  , 255]  // light orange
         ];
 
-        var choice = Math.random();
+        let choice = Math.random();
 
-        var seedList = [
+        let seedList = [
             [
                 [0, 0, 0, 1, 0, 0, 0, 0, 0, 0], 
                 [0, 2, 1, 1, 1, 1, 0, 0, 0, 0], 
@@ -642,7 +642,7 @@ export var Worlds = {
             },
             process: function (neighbors) {
 
-                var neighborOnes = neighbors.filter(function(item){
+                let neighborOnes = neighbors.filter(function(item){
                     return item.state == 1;
                 }).length;
 
@@ -668,7 +668,7 @@ export var Worlds = {
 
             // 50% chance to use a seed
             if(choice < 0.5){
-                var seed;
+                let seed;
                 // 25% chance to use a random seed
                 if(choice < 0.25) {
                     seed = seedList[Math.floor(Math.random() * seedList.length)];
@@ -678,10 +678,10 @@ export var Worlds = {
                     seed = seedList[0];
                 }
 
-                var minX = Math.floor(width / 2) - Math.floor(seed[0].length / 2);
-                var maxX = Math.floor(width / 2) + Math.floor(seed[0].length / 2);
-                var minY = Math.floor(height / 2) - Math.floor(seed.length / 2);
-                var maxY = Math.floor(height / 2) + Math.floor(seed.length / 2);
+                let minX = Math.floor(width / 2) - Math.floor(seed[0].length / 2);
+                let maxX = Math.floor(width / 2) + Math.floor(seed[0].length / 2);
+                let minY = Math.floor(height / 2) - Math.floor(seed.length / 2);
+                let maxY = Math.floor(height / 2) + Math.floor(seed.length / 2);
 
                 this.state = 0;
 
@@ -713,7 +713,7 @@ export var Worlds = {
      * http://www.fractaldesign.net/automataalgorithm.aspx
      */
     BelousovZhabotinsky: function(width = 128, height = 128) {
-        var world = new CellAuto.World({
+        let world = new CellAuto.World({
             width: width,
             height: height,
             wrap: true
@@ -722,20 +722,20 @@ export var Worlds = {
         // Override frame frequency for this setup
         world.recommendedFrameFrequency = 10;
 
-        // Config variables
-        var kernel = [ // weights for neighbors. First index is for self weight
+        // Config letiables
+        let kernel = [ // weights for neighbors. First index is for self weight
          0, 1, 1, 1,
             1,    1,
             1, 1, 1
         ].reverse();
-        var k1 = 5; // Lower gives higher tendency for a cell to be sickened by ill neighbors
-        var k2 = 1; // Lower gives higher tendency for a cell to be sickened by infected neighbors
-        var g = 5;
-        var numStates = 255;
+        let k1 = 5; // Lower gives higher tendency for a cell to be sickened by ill neighbors
+        let k2 = 1; // Lower gives higher tendency for a cell to be sickened by infected neighbors
+        let g = 5;
+        let numStates = 255;
 
         world.palette = [];
-        for (var i = 0; i < numStates; i++) {
-            var gray = Math.floor((255 / numStates) * i);
+        for (let i = 0; i < numStates; i++) {
+            let gray = Math.floor((255 / numStates) * i);
             world.palette.push([gray, gray, gray, 255]);
         }
 
@@ -744,13 +744,13 @@ export var Worlds = {
                 return this.state;
             },
             process: function (neighbors) {
-                var healthy = 0;
-                var infected = 0;
-                var ill = 0;
-                var sumStates = this.state;
+                let healthy = 0;
+                let infected = 0;
+                let ill = 0;
+                let sumStates = this.state;
     
-                for(var i = 0; i < neighbors.length + 1; i++) {
-                    var neighbor;
+                for(let i = 0; i < neighbors.length + 1; i++) {
+                    let neighbor;
                     if (i == 8) neighbor = this;
                     else neighbor = neighbors[i];
                     
@@ -805,9 +805,9 @@ export var Worlds = {
  * 
  */
 function Elementary(options) {
-    var world = new CellAuto.World(options);
+    let world = new CellAuto.World(options);
 
-    var rule = (options.rule >>> 0).toString(2);
+    let rule = (options.rule >>> 0).toString(2);
     while(rule.length < 8) {
         rule = "0" + rule;
     }
@@ -815,7 +815,7 @@ function Elementary(options) {
     console.log(options.rule);
 
     function processRule(leftAlive, centerAlive, rightAlive) {
-        var index = 0;
+        let index = 0;
         if(rightAlive) index += 1;
         if(centerAlive) index += 2;
         if(leftAlive) index += 4;
@@ -823,12 +823,12 @@ function Elementary(options) {
     }
     
     function testRule() {
-        var lastIndex = rule.length - 1;
-        for(var i = 0; i < 8; i++) {
+        let lastIndex = rule.length - 1;
+        for(let i = 0; i < 8; i++) {
             // Convert i to binary and use it to feed processRule
-            var bin = ((lastIndex - i) >>> 0).toString(2);
+            let bin = ((lastIndex - i) >>> 0).toString(2);
             while(bin.length < 3) bin = "0" + bin;
-            var ruleOut = processRule(bin[0] == "1", bin[1] == "1", bin[2] == "1");
+            let ruleOut = processRule(bin[0] == "1", bin[1] == "1", bin[2] == "1");
 
             console.assert(ruleOut == rule[i], bin + " " + rule[i] + " " + (ruleOut == rule[i]).toString());
         }
@@ -877,14 +877,14 @@ function Elementary(options) {
  * `S`: An array of ints representing the S component of the rule
  */
 function LifeLike(options, distributionFunc) {
-    var world = new CellAuto.World(options);
+    let world = new CellAuto.World(options);
 
     world.registerCellType('living', {
         getColor: function () {
             return this.alive ? 0 : 1;
         },
         process: function (neighbors) {
-            var surrounding = this.countSurroundingCellsWithValue(neighbors, 'wasAlive');
+            let surrounding = this.countSurroundingCellsWithValue(neighbors, 'wasAlive');
             this.alive = options.B.includes(surrounding) || options.S.includes(surrounding) && this.alive;
         },
         reset: function () {

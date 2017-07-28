@@ -5,7 +5,7 @@ export class Dust {
     constructor(container, initFinishedCallback) {
         this.container = container;
 
-        var worldNames = Object.keys(Worlds);
+        let worldNames = Object.keys(Worlds);
         this.worldOptions = {
             name: worldNames[worldNames.length * Math.random() << 0], // Random startup world
             //width: 128, // Can force a width/height here
@@ -107,7 +107,7 @@ export class Dust {
      * Called every frame. Continues indefinitely after being called once.
      */
     OnUpdate(delta) {
-        var noskip = this.framecounter.IncrementFrame();
+        let noskip = this.framecounter.IncrementFrame();
         if(noskip) {
             this.filter.uniforms.time += delta;
             this.world.step();
@@ -124,15 +124,15 @@ export class Dust {
      */
     UpdateTexture() {
         
-        var index = 0;
-        var ctx = this.textureCtx;		
+        let index = 0;
+        let ctx = this.textureCtx;		
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, this.textureCanvas.width, this.textureCanvas.height);
-        var pix = ctx.createImageData(this.textureCanvas.width, this.textureCanvas.height);		
-        for (var y = 0; y < this.textureCanvas.height; y++) {			
-            for (var x = 0; x < this.textureCanvas.width; x++) {
-                var paletteIndex = this.world.grid[y][x].getColor();
-                var colorRGBA = this.world.palette[paletteIndex];
+        let pix = ctx.createImageData(this.textureCanvas.width, this.textureCanvas.height);		
+        for (let y = 0; y < this.textureCanvas.height; y++) {			
+            for (let x = 0; x < this.textureCanvas.width; x++) {
+                let paletteIndex = this.world.grid[y][x].getColor();
+                let colorRGBA = this.world.palette[paletteIndex];
                 if(colorRGBA != null) {
                     pix.data[index++] = colorRGBA[0];				
                     pix.data[index++] = colorRGBA[1];				
