@@ -23,7 +23,5 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },
-  "dependencies": {
-    "three-js": "^79.0.0"
-  }
+  "dependencies": {}
 }
