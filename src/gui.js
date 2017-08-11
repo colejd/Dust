@@ -1,25 +1,41 @@
 import { Worlds } from "./worlds.js";
+let guify = require("guify");
 
-export class GUI {
+class GUI {
 
-    /**
-     * Creates and attaches a GUI to the page if DAT.GUI is included.
-     */
-    static Init(dust){
-        if(typeof(dat) === "undefined"){
-            console.warn("No DAT.GUI instance found. Import on this page to use!");
-            return;
-        }
+    Init(dust, container){
 
-        let gui = new dat.GUI();
+        this.panel = new guify.GUI({
+            title: "Dust", 
+            theme: "dark", 
+            root: container,
+            width: 350,
+            barMode: "above",
+            align: "right",
+            opacity: "0.95",
+            useMenuBar: true
+        }, []);
 
-        gui.add(dust.framecounter, 'frameFrequency').min(1).max(30).step(1).listen();
+        this.panel.Register({
+            type: "range", label: "Frame Frequency",
+            min: 1, max: 30, step: 1,
+            object: dust.framecounter, property: "frameFrequency"
+        });
 
-        gui.add(dust.worldOptions, 'name', Object.getOwnPropertyNames(Worlds)).onChange(() => {
-            dust.Setup();
-        }).name("Preset");
+        this.panel.Register({
+            type: "select", label: "Preset",
+            options: Object.getOwnPropertyNames(Worlds),
+            object: dust.worldOptions, property: "name",
+            onChange: () => dust.Setup()
+        });
 
-        gui.add(dust, "Setup").name("Reset");
+        this.panel.Register({
+            type: "button", label: "Reset",
+            action: () => dust.Setup()
+        });
+
     }
 
 }
+
+export let gui = new GUI();

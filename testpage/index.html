@@ -28,13 +28,22 @@
     </style>
 
     <style>
-        div#dust-container {
-            width: 512px;
-            height: 512px;
+        #dust-container {
+            max-width: 512px;
+            max-height: 512px;
+            width: 80vw;
+            height: 80vw;
             display: block;
             margin-left: auto;
             margin-right: auto;
+            margin-top: 5em;
+            position: relative;
         }
+
+        #dust-container > canvas {
+            width: 100% !important;
+            height: 100% !important;
+        } 
     </style>
 
     <!-- pixi.js -->
@@ -48,9 +57,9 @@
 
 <body>
 
-    <div class="info">
+    <!-- <div class="info">
 	    <a href="http://www.pixijs.com/" target="_blank">pixi.js</a> - dust
-    </div>
+    </div> -->
 
     <p style="text-align: center; margin-top: 4em">Epilepsy Warning</p>
 

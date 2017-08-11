@@ -1,6 +1,6 @@
 import { Detector } from "./utils/webgl-detect.js";
 import { Dust } from "./dust.js";
-import { GUI } from "./gui.js";
+import { gui } from "./gui.js";
 
 let container = document.getElementById("dust-container");
 
@@ -13,6 +13,6 @@ if ( !Detector.HasWebGL() ) {
 else {
     let dust = new Dust(container, () => {
         // Dust is now fully loaded
-        GUI.Init(dust);
+        gui.Init(dust, container);
     });
 }
