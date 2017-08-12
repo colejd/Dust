@@ -1,5 +1,6 @@
 import * as CellAuto from "./vendor/cellauto.js";
 import { Worlds } from "./worlds.js";
+let css = require("dom-css");
 
 export class Dust {
     constructor(container, initFinishedCallback) {
@@ -16,8 +17,12 @@ export class Dust {
         this.app = new PIXI.Application(
             {
                 antialias: false, 
-                transparent: false, 
-                resolution: 1
+                transparent: false,
+                resolution: 1,
+                width: this.container.offsetWidth,
+                height: this.container.offsetHeight,
+                //powerPreference: "high-performance"
+                autoResize: true,
             }
         );
         this.container.appendChild(this.app.view);
@@ -59,19 +64,10 @@ export class Dust {
         }
         this.framecounter.frameFrequency = this.world.recommendedFrameFrequency || 1;
 
-        this.app.renderer.resize(this.world.width, this.world.height);
+        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+        this.app.stage.scale = new PIXI.Point(this.container.offsetWidth / this.world.width, this.container.offsetHeight / this.world.height);
 
-        // Remove canvas filtering through css
-        this.app.renderer.view.style.cssText = ` 
-            image-rendering: optimizeSpeed; 
-            image-rendering: -moz-crisp-edges; 
-            image-rendering: -webkit-optimize-contrast; 
-            image-rendering: optimize-contrast;
-            image-rendering: -o-crisp-edges; 
-            image-rendering: pixelated; 
-            -ms-interpolation-mode: nearest-neighbor; 
-        `;
-        this.app.renderer.view.style.border = "1px dashed green";
+        //this.app.renderer.view.style.border = "1px dashed green";
         this.app.renderer.view.style.width = "100%";
         this.app.renderer.view.style.height = "100%";
         this.app.renderer.backgroundColor = 0xffffff;

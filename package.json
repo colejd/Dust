@@ -24,6 +24,7 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
+    "dom-css": "^2.1.0",
     "guify": "^0.3.0"
   }
 }
