@@ -25,6 +25,6 @@
   },
   "dependencies": {
     "dom-css": "^2.1.0",
-    "guify": "^0.3.0"
+    "guify": "^0.4.0"
   }
 }
