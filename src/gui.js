@@ -1,19 +1,22 @@
 import { Worlds } from "./worlds.js";
-let guify = require("guify");
 
 class GUI {
 
     Init(dust, container){
 
+        if(!guify) {
+            console.log("Guify not found! Import it on your page to enable the GUI for this program.");
+            return;
+        }
+
         this.panel = new guify.GUI({
             title: "Dust", 
             theme: "dark", 
             root: container,
-            width: 350,
+            width: 300,
             barMode: "above",
             align: "right",
             opacity: "0.95",
-            useMenuBar: true
         });
 
         this.panel.Register({
