@@ -3,7 +3,7 @@
 
 <strong style="color:red">!!! Epilepsy Warning !!!</strong> - This program is likely to produce fast strobing effects without warning.
 
-See a demo at [joncole.me/pages/dust](joncole.me/pages/dust).
+See a demo at [joncole.me/pages/dust](http://www.joncole.me/pages/dust).
 
 ## About
 Dust is a WebGL-based renderer for visualizing the behavior of various Cellular Automata. It uses [CellAuto](https://sanojian.github.io/cellauto) for the CA simulation and [Pixi](http://www.pixijs.com/) for displaying the output.
