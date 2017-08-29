@@ -9,7 +9,7 @@ class GUI {
             return;
         }
 
-        this.panel = new guify.GUI({
+        this.panel = new guify({
             title: "Dust", 
             theme: "dark", 
             root: container,
